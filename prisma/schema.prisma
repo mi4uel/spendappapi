@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Payment {
+  id            Int      @id @default(autoincrement())
+  description   String
+  amount        Decimal  @db.Decimal(15, 2)
+  date          DateTime
+  isPaid        Boolean  @default(false)
+  paymentMethod String?
+  receipt       String?
+  createdAt     DateTime @default(now())
+  userId        Int      @default(1)
+  isDeleted     Boolean  @default(false)
+  user          User     @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "payments_userId_fkey")
+  @@map("payments")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  password  String
+  role      Role      @default(TESTER)
+  createdAt DateTime  @default(now())
+  isDeleted Boolean   @default(false)
+  budgets   Budget[]
+  payments  Payment[]
+
+  @@map("users")
+}
+
+model Budget {
+  id        Int      @id @default(autoincrement())
+  amount    Decimal  @db.Decimal(15, 2)
+  month     Int
+  year      Int
+  userId    Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, year, month])
+  @@map("budgets")
+}
+
+enum Role {
+  ADMIN
+  TESTER
+  EDITOR
+}
