@@ -191,6 +191,23 @@ export const updatePayment = async (req, res) => {
   }
 };
 
+export const markAsDonePayment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = await prisma.payment.update({
+      where: { id: Number(id) },
+      data: {
+        isPaid: true
+      }
+    });
+
+    res.json(updated);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error updating payment" });
+  }
+};
+
 export const deletePayment = async (req, res) => {
   console.log('deleting', req.body)
   try {
