@@ -172,7 +172,7 @@ export const createPayment = async (req, res) => {
 export const updatePayment = async (req, res) => {
   try {
     const { id } = req.params;
-    const { description, amount, date, isPaid } = req.body;
+    const { description, amount, date, isPaid, paymentMethod } = req.body;
 
     const updated = await prisma.payment.update({
       where: { id: Number(id) },
@@ -180,10 +180,10 @@ export const updatePayment = async (req, res) => {
         description,
         amount: Number(amount),
         date: new Date(date),
-        isPaid: Boolean(isPaid)
+        isPaid: Boolean(isPaid),
+        paymentMethod
       }
     });
-
     res.json(updated);
   } catch (err) {
     console.error(err);
