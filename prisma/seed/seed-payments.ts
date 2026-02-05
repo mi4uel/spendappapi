@@ -21,5 +21,5 @@ export async function seedPayments() {
     })),
   });
 
-  console.log("✅ Payments seeded (Feb 2026)");
+  console.log("✅ Payments seeded");
 }
